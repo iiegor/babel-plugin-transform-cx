@@ -47,6 +47,8 @@ class ComponentName extends React.Component {
 }
 ```
 
+Check a real world example [here](https://github.com/iiegor/react-experiments/blob/master/gulpfile.js).
+
 ## Installation
 
 ```sh
