@@ -1,4 +1,4 @@
-# babel-plugin-transform-cx
+# babel-plugin-transform-cx [![npm version](https://badge.fury.io/js/babel-plugin-transform-cx.svg)](https://www.npmjs.com/package/babel-plugin-transform-cx)
 
 Transform cx calls to string literals
 
