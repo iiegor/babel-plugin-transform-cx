@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-cx",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Transform cx calls to string literals",
   "repository": "https://github.com/iiegor/babel-plugin-transform-cx",
   "license": "MIT",
