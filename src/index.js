@@ -16,20 +16,15 @@ function replaceSlashes(str) {
 }
 
 function nodeToLiteral(node) {
-  var args = node.arguments.slice();
-  var arg = args[0];
+  // TODO: Need to add an option to transform replaced arguments for string literals
+  node.arguments.forEach(function(arg) {
+    var selector = selectorMap[arg.value] || arg.value;
 
-  arg.raw = "'" + replaceSlashes(arg.rawValue) + "'";
-  arg.value = replaceSlashes(arg.value);
-  arg.rawValue = replaceSlashes(arg.rawValue);
+    arg.value = arg.extra.rawValue = selector;
+    arg.extra.raw = '\'' + selector + '\'';
+  });
 
-  for (var i = 1; i < args.length; i++) {
-    arg.raw =  "'" + arg.rawValue + " " + replaceSlashes(args[i].value) + "'";
-    arg.value += ' ' + replaceSlashes(args[i].value);
-    arg.rawValue += ' ' + replaceSlashes(args[i].rawValue);
-  }
-
-  return arg;
+  return node;
 }
 
 exports.setSelectorMap = function(cssSelectorMap) {
@@ -42,23 +37,23 @@ exports.transformer = function(babel) {
   /**
    * Transforms `cx('Foo')` to `Foo` and `cx('Foo', 'Bar')` to `Foo Bar`.
    */
-  function transformCxCall(context, call) {
+  function transformCxCall(context, node) {
     if (
-      !t.isIdentifier(call.callee, {name: 'cx'})
+      !t.isIdentifier(node.callee, {name: 'cx'})
     ) {
-      return undefined;
+      return node;
     }
 
-    return nodeToLiteral(call);
+    return nodeToLiteral(node);
   }
 
-  return new babel.Transformer('cx-replacement', {
-    CallExpression: {
-      exit: function(node, parent) {
-        return (
-          transformCxCall(this, node)
-        );
+  return {
+    visitor: {
+      CallExpression: {
+        exit: function(path) {
+          transformCxCall(this, path.node);
+        },
       },
-    },
-  });
+    }
+  };
 };
